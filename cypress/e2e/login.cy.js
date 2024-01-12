@@ -1,15 +1,13 @@
 import login from "../support/page_objects/login";
+import products from "../support/page_objects/products";
 
 describe("Login", function () {
-    it("the user logs in the site", function() {
-        cy.visit('https://magento.softwaretestingboard.com/');
-        cy.intercept('GET', '/pub/static/version1695896754/frontend/Magento/luma/en_US/Magento_Captcha/template/checkout/captcha.html').as('loginCaptcha');
-
-        cy.wait('@loginCaptcha').then(() => {
-            cy.login('yohelmuro@gmail.com', 'Test12345');
-        })
-        
-        login.welcomeText().should("have.text", "Welcome, Yohel Muñoz!");
-        
+    it("HAPPY PATH: the user tries to log in the site with correct information", function() {
+        let siteURL = 'https://www.saucedemo.com/';
+        cy.visit(siteURL);
+        cy.login('standard_user', 'secret_sauce').then(() => {
+            cy.url().should('eq', siteURL+'inventory.html')
+            products.productsTitle().should("have.text", "Products");
+        })        
     })
 });
